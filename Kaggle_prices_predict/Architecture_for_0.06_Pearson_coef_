@@ -1,0 +1,84 @@
+#Train_data_shape: 480 000 x 870
+#Valid_data_shape: 120 000 x 870
+
+
+from tensorflow.keras.layers import Dense, Dropout, BatchNormalization, Conv1D, Flatten, LeakyReLu, Add, Input
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.regularizers import l2
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import Model
+
+def residual_block(x, units, dropout_rate, alpha=0.01):
+    y = Dense(units)(x)
+    y = BatchNormalization()(y)
+    y = LeakyReLU(alpha=alpha)(y)
+    y = Dropout(dropout_rate)(y)
+    if x.shape[-1] != units:
+        x = Dense(units)(x)
+        x = BatchNormalization()(x)
+    
+    out = Add()([x, y])
+    out = LeakyReLU(alpha=alpha)(out)
+    return out
+
+inputs = Input(shape=(840,))
+x = Dense(512)(inputs)
+x = BatchNormalization()(x)
+x = LeakyReLU(alpha=0.01)(x)
+x = Dropout(0.2)(x)
+
+x = residual_block(x, 512, 0.15)
+x = residual_block(x, 512, 0.15)
+
+x = Dense(256)(x)
+x = BatchNormalization()(x)
+x = LeakyReLU(alpha=0.01)(x)
+x = Dropout(0.2)(x)
+
+x = residual_block(x, 256, 0.15)
+x = residual_block(x, 256, 0.15)
+
+x = Dense(128)(x)
+x = BatchNormalization()(x)
+x = LeakyReLU(alpha=0.01)(x)
+x = Dropout(0.15)(x)
+
+x = residual_block(x, 128, 0.1)
+
+x = Dense(96)(x)
+x = BatchNormalization()(x)
+x = LeakyReLU(alpha=0.01)(x)
+x = Dropout(0.1)(x)
+
+x = residual_block(x, 96, 0.1)
+
+x = Dense(64)(x)
+x = BatchNormalization()(x)
+x = LeakyReLU(alpha=0.01)(x)
+x = Dropout(0.1)(x)
+
+x = Dense(32)(x)
+x = BatchNormalization()(x)
+x = LeakyReLU(alpha=0.01)(x)
+x = Dropout(0.05)(x)
+outputs = Dense(1, dtype='float32')(x)
+import tensorflow as tf
+from scipy.stats import pearsonr
+
+model = Model(inputs=inputs, outputs=outputs)
+
+model.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=0.0005),
+    loss='mse',
+    metrics=['mse'] 
+)
+
+with tf.device('/GPU:0'):
+    history = modelll.fit(
+        X_train, y_train,
+        batch_size=128,
+        epochs=100,
+        shuffle = True,
+        validation_data=(X_test, y_test),
+        verbose=1
+    )
