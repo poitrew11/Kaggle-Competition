@@ -89,7 +89,7 @@ lgbm_params = {
     "subsample": 0.450669817684892,
     "verbose": -1
 }
-
+#Create massive for predictions
 oof_preds_model1 = np.zeros(len(train))
 test_preds_model1 = np.zeros(len(test))
 oof_preds_model2 = np.zeros(len(train))
@@ -154,7 +154,7 @@ for i, (train_idx, val_idx) in enumerate(kf.split(train)):
     )
 
     valid_idx_in_range_75 = val_idx[val_idx >= cutoff_idx_75]
-    if len(valid_idx_in_range_75) > 0:
+    if len(valid_idx_in_range_75) > 0: # check length
         X_valid_m2 = train.iloc[valid_idx_in_range_75][FEATURES]
         oof_preds_model2[valid_idx_in_range_75] = model2.predict(X_valid_m2)
     
