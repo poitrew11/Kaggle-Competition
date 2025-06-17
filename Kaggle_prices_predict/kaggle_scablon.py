@@ -89,7 +89,7 @@ lgbm_params = {
     "subsample": 0.450669817684892,
     "verbose": -1
 }
-#Create massive for predictions
+#Create massive for predictionss
 oof_preds_model1 = np.zeros(len(train))
 test_preds_model1 = np.zeros(len(test))
 oof_preds_model2 = np.zeros(len(train))
