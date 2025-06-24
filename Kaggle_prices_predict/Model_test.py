@@ -18,6 +18,7 @@ print(data.shape)
 print(data_test.shape)
 
 data.head()
+tester_2 = data
 train = data
 
 data_test = data_test.drop(['label'], axis = 1)
