@@ -106,8 +106,7 @@ print(f"Model 1 - Full data sample weights mean: {sample_weights_full.mean():.4f
 cutoff_idx_75 = int(len(train) * 0.25)
 print(f"\nModel 2 - Using most recent {len(train) - cutoff_idx_75} samples (75% of data)")
 cutoff_idx_50 = int(len(train) * 0.50)
-print(f"\nModel 3 - Using most recent {len(train) - cutoff_idx_50} samples (50% of data)")
-#start of training
+print(f"\nModel 3 - Using most recent {len(train) - cutoff_idx_50} samples (50% of data)"
 for i, (train_idx, val_idx) in enumerate(kf.split(train)):
     print(f"Fold {i + 1}") #Num folds
     print("\n--- Model 1: Full Data with Time Weights ---")
